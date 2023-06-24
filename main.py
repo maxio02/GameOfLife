@@ -1,10 +1,10 @@
 import pygame
 from board import Board
 import sys
-ROWS = 144*5//2
-COLS = 256*5//2
-WINDOW_HEIGHT = 1440
-WINDOW_WIDTH = 2560
+ROWS = 108*5//2
+COLS = 192*5//2
+WINDOW_HEIGHT = 1080
+WINDOW_WIDTH = 1920
 
 
 pygame.init()
@@ -17,7 +17,7 @@ CELL_HEIGHT = screen_height // ROWS
 window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("Game Of Life")
 clock = pygame.time.Clock()
-clock.tick(60)
+clock.tick(30)
 
 board = Board((ROWS, COLS), 'random', CELL_WIDTH, CELL_HEIGHT)
 fps_font = pygame.font.SysFont(None, 24)
@@ -37,7 +37,7 @@ def update_board():
 
     window.fill((0, 0, 0))
     board.draw_cells(window, 'white')
-    clock.tick(144)
+    clock.tick(30)
     fps_label = fps_font.render(f"FPS: {clock.get_fps():.1f}", True, (255, 255, 255))
     window.blit(fps_label, (10, 10))
 
