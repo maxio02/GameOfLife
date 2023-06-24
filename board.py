@@ -22,6 +22,9 @@ class Board:
             self.cells: np.ndarray[Cell] = np.array(
                 self.zeros_init()).flatten()
             self.init_glider()
+        elif init_type == 'center':
+            self.cells: np.ndarray[Cell] = np.array(self.zeros_init()).flatten()
+            self.random_fill_area(size[1]//2, size[0]//2, 10, 10)
 
         for cell in self.cells:
             cell.assign_neighbours(self)
@@ -46,6 +49,11 @@ class Board:
     def random_init(self):
         return [[Cell(random.getrandbits(1), i, j, self.cell_width, self.cell_height) for i in range(self.size[1])] for j in range(self.size[0])]
 
+    def random_fill_area(self, start_x: int, start_y: int, width: int, height: int):
+        for y in range(start_y, start_y + height):
+            for x in range(start_x, start_x + width):
+                self.cells[x + y * self.size[1]].isAlive = bool(random.getrandbits(1))
+
     def zeros_init(self):
         return [[Cell(False, i, j, self.cell_width, self.cell_height) for i in range(self.size[1])] for j in range(self.size[0])]
 
@@ -56,12 +64,12 @@ class Board:
             [0, 1, 1]
         ]
 
-        glider_row = random.randint(0, self.size[1] - len(glider))
-        glider_col = random.randint(0, self.size[0] - len(glider[0]))
+        glider_row = random.randint(0, self.size[0] - len(glider))
+        glider_col = random.randint(0, self.size[1] - len(glider[0]))
 
         for i in range(len(glider)):
             for j in range(len(glider[0])):
-                self.cells[glider_row + i + (glider_col + j) * i].isAlive = glider[i][j]
+                self.cells[glider_col + i + (glider_row + j) * self.size[1]].isAlive = glider[i][j]
 
     def draw_cells(self, canvas, color: str):
         if color == 'white':
@@ -81,6 +89,18 @@ class Board:
         for cell in self.cells:
             alive_neighbours = cell.aliveNeighbours
             if cell.isAlive and (alive_neighbours == 2 or alive_neighbours == 3):
+                pass
+            elif not cell.isAlive and alive_neighbours == 3:
+                cell.resurrect()
+            else:
+                cell.kill()
+
+    def update_cells_maze(self):
+        self.update_neighbour_sums()
+
+        for cell in self.cells:
+            alive_neighbours = cell.aliveNeighbours
+            if cell.isAlive and (alive_neighbours >= 1 and alive_neighbours <= 5):
                 pass
             elif not cell.isAlive and alive_neighbours == 3:
                 cell.resurrect()
