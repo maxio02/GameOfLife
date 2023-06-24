@@ -38,15 +38,10 @@ class Cell:
         self.neighbours = neighbours
 
     def update_alive_neighbours(self):
-        alive_neighbours = 0
         for neighbour in self.neighbours:
-            if neighbour.isAlive:
-                alive_neighbours += 1
-
-        self.aliveNeighbours = alive_neighbours
+                neighbour.aliveNeighbours += 1
 
     def draw(self, surface, color: tuple[int, int, int]):
-        if self.isAlive:
             x1 = self.xpos * self.width
             y1 = self.ypos * self.height
             pygame.draw.rect(surface, color, (x1, y1, self.width-1, self.height-1))

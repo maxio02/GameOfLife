@@ -1,8 +1,8 @@
 import pygame
 from board import Board
 import sys
-ROWS = 144*5//4
-COLS = 256*5//4
+ROWS = 144*5//2
+COLS = 256*5//2
 WINDOW_HEIGHT = 1440
 WINDOW_WIDTH = 2560
 

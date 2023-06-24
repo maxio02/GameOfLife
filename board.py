@@ -74,14 +74,20 @@ class Board:
     def draw_cells(self, canvas, color: str):
         if color == 'white':
             for cell in self.cells:
-                cell.draw(canvas, (255,255,255))
+                if cell.isAlive:
+                    cell.draw(canvas, (255,255,255))
         else:
             for cell in self.cells:
                 cell.draw(canvas, (255-int(cell.xpos/self.size[1]*255),int(cell.xpos/self.size[1]*255),int(cell.ypos/self.size[0]*255)))
 
     def update_neighbour_sums(self):
         for cell in self.cells:
-            cell.update_alive_neighbours()
+            cell.aliveNeighbours = 0
+
+        for cell in self.cells:
+            if cell.isAlive:
+                cell.update_alive_neighbours()
+        
 
     def update_cells(self):
         self.update_neighbour_sums()
@@ -92,9 +98,8 @@ class Board:
                 pass
             elif not cell.isAlive and alive_neighbours == 3:
                 cell.resurrect()
-            else:
+            elif cell.isAlive:
                 cell.kill()
-
     def update_cells_maze(self):
         self.update_neighbour_sums()
 
@@ -104,5 +109,5 @@ class Board:
                 pass
             elif not cell.isAlive and alive_neighbours == 3:
                 cell.resurrect()
-            else:
+            elif cell.isAlive:
                 cell.kill()
